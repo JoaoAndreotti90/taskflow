@@ -11,10 +11,10 @@
   justify-content: space-between;
 }
 
-.logo {
+.sidebar-logo-container { 
   font-size: 1.5rem;
   font-weight: 700;
-  color: white;
+  color: white; 
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
@@ -89,12 +89,6 @@
   object-fit: cover;
 }
 
-.user-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
 .user-name {
   font-size: 0.9rem;
   font-weight: 600;
@@ -121,7 +115,7 @@
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); 
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -198,9 +192,10 @@
     z-index: 1000;
     border-top: 1px solid #1f2937;
     justify-content: center;
+    flex-direction: row;
   }
 
-  .logo, .sidebar-footer {
+  .sidebar-logo-container, .sidebar-footer {
     display: none;
   }
 

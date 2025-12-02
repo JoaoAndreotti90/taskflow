@@ -32,7 +32,7 @@ export function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="logo">
+      <div className="sidebar-logo-container">
         <Kanban size={32} weight="fill" className="logo-icon" />
         TaskFlow
       </div>
