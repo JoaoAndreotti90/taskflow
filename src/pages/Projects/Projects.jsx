@@ -64,7 +64,6 @@ export function Projects() {
 
   async function handleDeleteProject() {
     if (!projectToDelete) return
-
     try {
       const { error } = await supabase
         .from('projects')
@@ -72,7 +71,6 @@ export function Projects() {
         .eq('id', projectToDelete)
 
       if (error) throw error
-
       setProjectToDelete(null)
       fetchProjects()
     } catch (error) {
@@ -92,7 +90,7 @@ export function Projects() {
         <p>Carregando projetos...</p>
       ) : projects.length === 0 ? (
         <div className="empty-state-container">
-          <FolderPlus size={64} color="#e5e7eb" weight="thin" />
+          <FolderPlus size={64} weight="thin" className="empty-icon" />
           <h2>Você ainda não tem projetos</h2>
           <p>Crie seu primeiro projeto para começar a organizar suas tarefas.</p>
           <button className="btn-new-project-large" onClick={() => setIsAddModalOpen(true)}>
@@ -114,30 +112,15 @@ export function Projects() {
 
           <div className="projects-grid">
             {projects.map(project => (
-              <div 
-                className="project-card" 
-                key={project.id} 
-                onClick={() => handleEnterProject(project)}
-              >
+              <div className="project-card" key={project.id} onClick={() => handleEnterProject(project)}>
                 <div className="card-header">
                   <h3 className="project-name">{project.name}</h3>
-                  <button 
-                    className="btn-delete-project" 
-                    onClick={(e) => {
-                      e.stopPropagation() 
-                      setProjectToDelete(project.id)
-                    }}
-                    title="Excluir projeto"
-                  >
+                  <button className="btn-delete-project" onClick={(e) => { e.stopPropagation(); setProjectToDelete(project.id) }} title="Excluir projeto">
                     <Trash size={18} />
                   </button>
                 </div>
-                
                 <p className="project-desc">{project.description || 'Sem descrição'}</p>
-                
-                <span className={`status ${project.status}`}>
-                  {statusMap[project.status]}
-                </span>
+                <span className={`status ${project.status}`}>{statusMap[project.status]}</span>
               </div>
             ))}
           </div>
@@ -152,6 +135,7 @@ export function Projects() {
               <input autoFocus type="text" className="modal-input" placeholder="Nome do Projeto" value={newName} onChange={e => setNewName(e.target.value)} required />
               <input type="text" className="modal-input" placeholder="Descrição curta" value={newDesc} onChange={e => setNewDesc(e.target.value)} />
               <select className="modal-select" value={newStatus} onChange={e => setNewStatus(e.target.value)}>
+                <option value="pending">Pendente</option>
                 <option value="active">Em Andamento</option>
                 <option value="paused">Pausado</option>
                 <option value="finished">Concluído</option>

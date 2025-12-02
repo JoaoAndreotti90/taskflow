@@ -27,6 +27,10 @@
   color: #6b7280;
 }
 
+.empty-icon {
+  color: #e5e7eb;
+}
+
 .empty-state-container h2 {
   font-size: 1.5rem;
   font-weight: 700;
@@ -147,6 +151,7 @@
   text-transform: capitalize;
 }
 
+.status.pending { background: #f3f4f6; color: #4b5563; }
 .status.active { background: #dbeafe; color: #1e40af; }
 .status.paused { background: #fef3c7; color: #92400e; }
 .status.finished { background: #d1fae5; color: #065f46; }
@@ -202,7 +207,11 @@
 .btn-confirm { padding: 0.5rem 1rem; background: #4f46e5; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
 .btn-danger { padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .stats-container {
+    display: none !important;
+  }
+
   .page-container {
     padding: 1rem;
   }

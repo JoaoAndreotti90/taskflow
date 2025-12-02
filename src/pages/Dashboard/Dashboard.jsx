@@ -7,15 +7,13 @@ import './Dashboard.css'
 
 export function Dashboard() {
   const navigate = useNavigate()
-  const [userInitials, setUserInitials] = useState('...')
-  const [userAvatarUrl, setUserAvatarUrl] = useState(null)
   
   const [projectName, setProjectName] = useState('Carregando...')
+  const [projectStatus, setProjectStatus] = useState('pending')
   const [isValidProject, setIsValidProject] = useState(false)
 
   useEffect(() => {
     validateProject()
-    getUserProfile()
   }, [])
 
   async function validateProject() {
@@ -28,7 +26,7 @@ export function Dashboard() {
 
     const { data, error } = await supabase
       .from('projects')
-      .select('name')
+      .select('name, status')
       .eq('id', projectId)
       .single()
 
@@ -38,18 +36,20 @@ export function Dashboard() {
       navigate('/projects')
     } else {
       setProjectName(data.name)
+      setProjectStatus(data.status)
       setIsValidProject(true)
     }
   }
 
-  async function getUserProfile() {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user && user.user_metadata) {
-      const firstName = user.user_metadata.first_name || ''
-      const lastName = user.user_metadata.last_name || ''
-      setUserInitials(((firstName[0] || '') + (lastName[0] || '')).toUpperCase())
-      if (user.user_metadata.avatar_url) setUserAvatarUrl(user.user_metadata.avatar_url)
-    }
+  function handleStatusChange(newStatus) {
+    setProjectStatus(newStatus)
+  }
+
+  const statusLabel = {
+    pending: 'Pendente',
+    active: 'Em Andamento',
+    paused: 'Pausado',
+    finished: 'Concluído'
   }
 
   if (!isValidProject) {
@@ -61,18 +61,23 @@ export function Dashboard() {
       <header className="dashboard-header">
         
         <div className="header-left">
-          <Link to="/projects" className="btn-back" title="Trocar de Projeto">
+          <Link to="/projects" className="btn-back" title="Voltar para Projetos">
             <ArrowLeft size={24} weight="bold" />
           </Link>
+          
           <div className="project-info">
-            <span className="project-subtitle">Dashboard do Projeto</span>
-            <h2 className="project-title-large">{projectName}</h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+              <h2 className="project-title-large">{projectName}</h2>
+              <span className={`status-badge ${projectStatus}`}>
+                {statusLabel[projectStatus]}
+              </span>
+            </div>
           </div>
         </div>
-        
+
       </header>
       
-      <Board />
+      <Board onStatusChange={handleStatusChange} />
     </div>
   )
 }

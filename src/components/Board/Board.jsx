@@ -5,7 +5,7 @@ import { supabase } from '../../supabase'
 import { Stats } from '../Stats/Stats'
 import './Board.css'
 
-export function Board() {
+export function Board({ onStatusChange }) {
   const projectId = localStorage.getItem('activeProjectId')
 
   const [columns, setColumns] = useState({
@@ -74,12 +74,14 @@ export function Board() {
     const hasPaused = tasksList.some(t => t.status === 'paused')
     const hasDone = tasksList.some(t => t.status === 'done')
 
-    let newStatus = 'active'
+    let newStatus = 'pending'
 
-    if (hasTodo || hasDoing) {
+    if (hasDoing) {
       newStatus = 'active'
     } else if (hasPaused) {
       newStatus = 'paused'
+    } else if (hasTodo) {
+      newStatus = 'pending'
     } else if (hasDone) {
       newStatus = 'finished'
     }
@@ -88,6 +90,10 @@ export function Board() {
       .from('projects')
       .update({ status: newStatus })
       .eq('id', projectId)
+
+    if (onStatusChange) {
+      onStatusChange(newStatus)
+    }
   }
 
   async function updateTaskStatus(taskId, newStatus) {
@@ -115,21 +121,25 @@ export function Board() {
       }])
     
     if (!error) {
+      if (onStatusChange) onStatusChange('pending')
+      
       fetchTasks()
       setIsAddModalOpen(false)
       setNewTaskTitle('')
     }
   }
 
-  function openDeleteModal(taskId) {
-    setTaskToDelete(taskId)
-  }
+  function openDeleteModal(taskId) { setTaskToDelete(taskId) }
 
   async function confirmDeleteTask() {
     if (!taskToDelete) return
     const { error } = await supabase.from('tasks').delete().eq('id', taskToDelete)
     
     if (!error) {
+      const updatedTasks = rawTasks.filter(t => t.id.toString() !== taskToDelete)
+      setRawTasks(updatedTasks)
+      checkProjectCompletion(updatedTasks)
+      
       fetchTasks()
       setTaskToDelete(null)
     }

@@ -2,10 +2,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 import './Stats.css'
 
 const COLORS = {
-  todo: '#94a3b8',
-  doing: '#3b82f6',
-  paused: '#f59e0b',
-  done: '#22c55e'
+  todo: '#94a3b8',   
+  doing: '#3b82f6',   
+  paused: '#f59e0b', 
+  done: '#22c55e'     
 }
 
 export function Stats({ tasks }) {

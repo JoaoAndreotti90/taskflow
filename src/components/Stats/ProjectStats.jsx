@@ -2,19 +2,22 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 import './ProjectStats.css'
 
 const COLORS = {
-  active: '#3b82f6',
-  paused: '#f59e0b',
-  finished: '#22c55e'
+  pending: '#94a3b8',  
+  active: '#3b82f6',  
+  paused: '#f59e0b',   
+  finished: '#22c55e'  
 }
 
 export function ProjectStats({ projects }) {
   if (!projects || projects.length === 0) return null
 
+  const pendingCount = projects.filter(p => p.status === 'pending').length
   const activeCount = projects.filter(p => p.status === 'active').length
   const pausedCount = projects.filter(p => p.status === 'paused').length
   const finishedCount = projects.filter(p => p.status === 'finished').length
 
   const data = [
+    { name: 'Pendente', value: pendingCount, fill: COLORS.pending },
     { name: 'Em Andamento', value: activeCount, fill: COLORS.active },
     { name: 'Pausado', value: pausedCount, fill: COLORS.paused },
     { name: 'Concluído', value: finishedCount, fill: COLORS.finished },
