@@ -1,14 +1,19 @@
 .sidebar {
+  position: fixed; 
+  top: 0;
+  left: 0;
   width: 260px;
+  height: 100vh;
   background-color: #111827;
   color: white;
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
   flex-shrink: 0;
-  height: 100vh;
   transition: all 0.3s ease;
   justify-content: space-between;
+  z-index: 100; 
+  overflow-y: auto; 
 }
 
 .sidebar-logo-container { 
@@ -188,6 +193,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
+    top: auto;
     padding: 0.5rem;
     z-index: 1000;
     border-top: 1px solid #1f2937;

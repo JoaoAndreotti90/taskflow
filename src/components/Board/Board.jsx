@@ -18,6 +18,9 @@ export function Board({ onStatusChange }) {
   const [rawTasks, setRawTasks] = useState([])
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [newTaskTitle, setNewTaskTitle] = useState('')
+  
+  const [newTaskTag, setNewTaskTag] = useState('Baixa')
+
   const [taskToDelete, setTaskToDelete] = useState(null)
   const [userInitials, setUserInitials] = useState('...')
 
@@ -57,8 +60,8 @@ export function Board({ onStatusChange }) {
           newColumns[task.status].items.push({
             id: task.id.toString(),
             content: task.title,
-            tag: task.tag || 'Geral',
-            tagClass: task.tag_class || 'default'
+            tag: task.tag || 'Baixa', 
+            tagClass: task.tag_class || 'low'
           })
         }
       })
@@ -86,14 +89,8 @@ export function Board({ onStatusChange }) {
       newStatus = 'finished'
     }
 
-    await supabase
-      .from('projects')
-      .update({ status: newStatus })
-      .eq('id', projectId)
-
-    if (onStatusChange) {
-      onStatusChange(newStatus)
-    }
+    await supabase.from('projects').update({ status: newStatus }).eq('id', projectId)
+    if (onStatusChange) onStatusChange(newStatus)
   }
 
   async function updateTaskStatus(taskId, newStatus) {
@@ -106,26 +103,34 @@ export function Board({ onStatusChange }) {
     checkProjectCompletion(updatedTasks)
   }
 
+  function openAddModal() {
+    setNewTaskTitle('')
+    setNewTaskTag('Baixa') 
+    setIsAddModalOpen(true)
+  }
+
   async function confirmAddTask(e) {
     e.preventDefault()
     if (!newTaskTitle.trim()) return
+
+    let tagClass = 'low'
+    if (newTaskTag === 'Média') tagClass = 'medium'
+    if (newTaskTag === 'Alta') tagClass = 'high'
 
     const { error } = await supabase
       .from('tasks')
       .insert([{ 
         title: newTaskTitle, 
         status: 'todo', 
-        tag: 'Geral', 
-        tag_class: 'design', 
+        tag: newTaskTag, 
+        tag_class: tagClass,
         project_id: projectId 
       }])
     
     if (!error) {
       if (onStatusChange) onStatusChange('pending')
-      
       fetchTasks()
       setIsAddModalOpen(false)
-      setNewTaskTitle('')
     }
   }
 
@@ -139,15 +144,9 @@ export function Board({ onStatusChange }) {
       const updatedTasks = rawTasks.filter(t => t.id.toString() !== taskToDelete)
       setRawTasks(updatedTasks)
       checkProjectCompletion(updatedTasks)
-      
       fetchTasks()
       setTaskToDelete(null)
     }
-  }
-
-  function openAddModal() {
-    setIsAddModalOpen(true)
-    setNewTaskTitle('')
   }
 
   const onDragEnd = (result) => {
@@ -209,7 +208,7 @@ export function Board({ onStatusChange }) {
                         {(provided) => (
                           <div className="task-card" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                             <div className="card-tags">
-                              <span className={`tag ${item.tagClass}`}>{item.tag || 'Geral'}</span>
+                              <span className={`tag ${item.tagClass}`}>{item.tag}</span>
                               <button className="btn-icon-delete" onClick={() => openDeleteModal(item.id)}>
                                 <Trash size={16} />
                               </button>
@@ -237,7 +236,26 @@ export function Board({ onStatusChange }) {
           <div className="modal-content">
             <h2 className="modal-title">Nova Tarefa</h2>
             <form onSubmit={confirmAddTask}>
-              <input autoFocus type="text" className="modal-input" placeholder="Nome da tarefa" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} />
+              
+              <input 
+                autoFocus 
+                type="text" 
+                className="modal-input" 
+                placeholder="Nome da tarefa" 
+                value={newTaskTitle} 
+                onChange={(e) => setNewTaskTitle(e.target.value)} 
+              />
+
+              <select 
+                className="modal-select" 
+                value={newTaskTag}
+                onChange={(e) => setNewTaskTag(e.target.value)}
+              >
+                <option value="Baixa">Baixa Prioridade</option>
+                <option value="Média">Média Prioridade</option>
+                <option value="Alta">Alta Prioridade</option>
+              </select>
+
               <div className="modal-actions">
                 <button type="button" className="btn-cancel" onClick={() => setIsAddModalOpen(false)}>Cancelar</button>
                 <button type="submit" className="btn-confirm">Criar</button>

@@ -13,7 +13,7 @@ export function Projects() {
   const [projectToDelete, setProjectToDelete] = useState(null)
   const [newName, setNewName] = useState('')
   const [newDesc, setNewDesc] = useState('')
-  const [newStatus, setNewStatus] = useState('active')
+  const [newStatus, setNewStatus] = useState('pending')
 
   useEffect(() => {
     fetchProjects()
@@ -24,7 +24,7 @@ export function Projects() {
       setLoading(true)
       const { data, error } = await supabase
         .from('projects')
-        .select('*')
+        .select('*, tasks(tag)') 
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -64,6 +64,7 @@ export function Projects() {
 
   async function handleDeleteProject() {
     if (!projectToDelete) return
+
     try {
       const { error } = await supabase
         .from('projects')
@@ -71,6 +72,7 @@ export function Projects() {
         .eq('id', projectToDelete)
 
       if (error) throw error
+
       setProjectToDelete(null)
       fetchProjects()
     } catch (error) {
@@ -79,6 +81,7 @@ export function Projects() {
   }
 
   const statusMap = {
+    pending: 'Pendente',
     active: 'Em Andamento',
     paused: 'Pausado',
     finished: 'Concluído'
@@ -111,18 +114,45 @@ export function Projects() {
           <ProjectStats projects={projects} />
 
           <div className="projects-grid">
-            {projects.map(project => (
-              <div className="project-card" key={project.id} onClick={() => handleEnterProject(project)}>
-                <div className="card-header">
-                  <h3 className="project-name">{project.name}</h3>
-                  <button className="btn-delete-project" onClick={(e) => { e.stopPropagation(); setProjectToDelete(project.id) }} title="Excluir projeto">
-                    <Trash size={18} />
-                  </button>
+            {projects.map(project => {
+              const tasks = project.tasks || []
+              const highCount = tasks.filter(t => t.tag === 'Alta').length
+              const mediumCount = tasks.filter(t => t.tag === 'Média').length
+              const lowCount = tasks.filter(t => t.tag === 'Baixa').length 
+
+              return (
+                <div 
+                  className="project-card" 
+                  key={project.id} 
+                  onClick={() => handleEnterProject(project)}
+                >
+                  <div className="card-header">
+                    <h3 className="project-name">{project.name}</h3>
+                    <button 
+                      className="btn-delete-project" 
+                      onClick={(e) => { e.stopPropagation(); setProjectToDelete(project.id) }} 
+                      title="Excluir projeto"
+                    >
+                      <Trash size={18} />
+                    </button>
+                  </div>
+                  
+                  <p className="project-desc">{project.description || 'Sem descrição'}</p>
+                  
+                  <div className="card-footer-row">
+                    <span className={`status ${project.status || 'pending'}`}>
+                      {statusMap[project.status] || 'Pendente'}
+                    </span>
+                    
+                    <div className="priority-counts">
+                      {highCount > 0 && <span className="prio-badge high">Alta: {highCount}</span>}
+                      {mediumCount > 0 && <span className="prio-badge medium">Média: {mediumCount}</span>}
+                      {lowCount > 0 && <span className="prio-badge low">Baixa: {lowCount}</span>}
+                    </div>
+                  </div>
                 </div>
-                <p className="project-desc">{project.description || 'Sem descrição'}</p>
-                <span className={`status ${project.status}`}>{statusMap[project.status]}</span>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </>
       )}

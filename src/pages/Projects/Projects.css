@@ -1,7 +1,9 @@
 .page-container {
   padding: 2rem;
-  height: 100%;
+  min-height: 100vh;
   overflow-y: auto;
+  margin-left: 260px;
+  width: calc(100% - 260px);
 }
 
 .page-header {
@@ -28,6 +30,8 @@
 }
 
 .empty-icon {
+  width: 64px;
+  height: 64px;
   color: #e5e7eb;
 }
 
@@ -65,6 +69,11 @@
   transform: translateY(-2px);
 }
 
+.icon-add-large {
+  width: 24px;
+  height: 24px;
+}
+
 .btn-new-project {
   background-color: #4f46e5;
   color: white;
@@ -84,6 +93,11 @@
   background-color: #4338ca;
 }
 
+.icon-add {
+  width: 20px;
+  height: 20px;
+}
+
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -99,6 +113,10 @@
   position: relative;
   border: 1px solid transparent;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 160px;
 }
 
 .project-card:hover {
@@ -135,11 +153,25 @@
   color: #ef4444;
 }
 
+.icon-trash {
+  width: 18px;
+  height: 18px;
+}
+
 .project-desc {
   color: #6b7280;
   margin-bottom: 1rem;
   font-size: 0.9rem;
-  min-height: 40px;
+  flex-grow: 1;
+}
+
+.card-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 1rem;
 }
 
 .status {
@@ -155,6 +187,37 @@
 .status.active { background: #dbeafe; color: #1e40af; }
 .status.paused { background: #fef3c7; color: #92400e; }
 .status.finished { background: #d1fae5; color: #065f46; }
+
+.priority-counts {
+  display: flex;
+  gap: 6px;
+}
+
+.prio-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+.prio-badge.high {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.prio-badge.medium {
+  background-color: #ffedd5;
+  color: #c2410c;
+  border-color: #fed7aa;
+}
+
+.prio-badge.low {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
 
 .modal-overlay {
   position: fixed;
@@ -203,17 +266,40 @@
 }
 
 .modal-actions { display: flex; justify-content: flex-end; gap: 0.75rem; }
-.btn-cancel { padding: 0.5rem 1rem; background: #f3f4f6; border: none; border-radius: 6px; cursor: pointer; color: #374151; font-weight: 500; }
-.btn-confirm { padding: 0.5rem 1rem; background: #4f46e5; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
-.btn-danger { padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+
+.btn-cancel {
+  padding: 0.5rem 1rem;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #374151;
+  font-weight: 500;
+}
+
+.btn-confirm {
+  padding: 0.5rem 1rem;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-danger {
+  padding: 0.5rem 1rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
 
 @media (max-width: 1024px) {
   .stats-container {
     display: none !important;
-  }
-
-  .page-container {
-    padding: 1rem;
   }
 
   .projects-grid {
@@ -229,5 +315,14 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+    padding-bottom: 80px;
   }
 }

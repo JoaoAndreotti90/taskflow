@@ -1,3 +1,4 @@
+/* Container Geral */
 .board-wrapper {
   display: flex;
   flex-direction: column;
@@ -64,10 +65,7 @@
   align-items: center;
   justify-content: center;
 }
-
-.btn-icon-add:hover {
-  color: #4338ca;
-}
+.btn-icon-add:hover { color: #4338ca; }
 
 .task-list {
   display: flex;
@@ -108,20 +106,10 @@
   font-weight: 600;
 }
 
-.tag.urgent {
-  background-color: #fecaca;
-  color: #991b1b;
-}
-
-.tag.design {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-.tag.default {
-  background-color: #e5e7eb;
-  color: #374151;
-}
+/* CORES DAS TAGS (Apenas as 3 prioridades) */
+.tag.low { background-color: #dbeafe; color: #1e40af; }     /* Azul */
+.tag.medium { background-color: #ffedd5; color: #c2410c; }  /* Laranja */
+.tag.high { background-color: #fee2e2; color: #991b1b; }    /* Vermelho */
 
 .btn-icon-delete {
   margin-left: auto;
@@ -132,10 +120,7 @@
   display: flex;
   align-items: center;
 }
-
-.btn-icon-delete:hover {
-  color: #ef4444;
-}
+.btn-icon-delete:hover { color: #ef4444; }
 
 .card-title {
   font-weight: 600;
@@ -166,91 +151,38 @@
   font-weight: 700;
 }
 
-.card-date {
-  font-size: 0.75rem;
-  color: #9ca3af;
-}
+.card-date { font-size: 0.75rem; color: #9ca3af; }
 
+/* MODAIS */
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; backdrop-filter: blur(2px);
 }
-
 .modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 400px;
+  background: white; padding: 2rem; border-radius: 12px;
+  width: 100%; max-width: 400px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
-
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 1rem;
-}
-
-.modal-description {
-  margin-bottom: 1.5rem;
-  color: #6b7280;
-}
+.modal-title { font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 1rem; }
+.modal-description { margin-bottom: 1.5rem; color: #6b7280; }
 
 .modal-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  outline: none;
+  width: 100%; padding: 0.75rem; border: 1px solid #d1d5db;
+  border-radius: 6px; font-size: 1rem; margin-bottom: 1rem; outline: none;
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
+/* Estilo do Select */
+.modal-select {
+  width: 100%; padding: 0.75rem; border: 1px solid #d1d5db;
+  border-radius: 6px; font-size: 1rem; margin-bottom: 1.5rem; background-color: white;
 }
 
-.btn-cancel {
-  padding: 0.5rem 1rem;
-  background-color: #f3f4f6;
-  color: #374151;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-confirm {
-  padding: 0.5rem 1rem;
-  background-color: #4f46e5;
-  color: white;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-danger {
-  background-color: #ef4444;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-}
+.modal-actions { display: flex; justify-content: flex-end; gap: 0.75rem; }
+.btn-cancel { padding: 0.5rem 1rem; background-color: #f3f4f6; color: #374151; border-radius: 6px; font-weight: 500; cursor: pointer; border: none;}
+.btn-confirm { padding: 0.5rem 1rem; background-color: #4f46e5; color: white; border-radius: 6px; font-weight: 500; cursor: pointer; border: none;}
+.btn-danger { background-color: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; cursor: pointer; border: none;}
 
 @media (max-width: 768px) {
   .board-container {
