@@ -1,0 +1,48 @@
+.stats-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 160px;
+}
+
+.stats-info h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.stats-info p {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.chart-wrapper {
+  width: 300px;
+  height: 100%;
+  font-size: 0.8rem;
+  min-width: 300px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .stats-container {
+    flex-direction: column;
+    height: auto;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .chart-wrapper {
+    width: 100%;
+    min-width: unset;
+    height: 220px;
+    justify-content: center;
+  }
+}
