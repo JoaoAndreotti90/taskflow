@@ -25,7 +25,7 @@
   gap: 0.5rem;
   font-size: 2rem;
   font-weight: 800;
-  color: #111827;
+  color: #111827 !important;
   margin-bottom: 0.5rem;
   letter-spacing: -0.03em;
 }
@@ -141,17 +141,18 @@
   border: 1px solid #bbf7d0;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 771px) {
   .login-card {
     padding: 1.5rem;
   }
-
+  
+  .logo {
+    display: flex !important; 
+    font-size: 1.75rem;
+  }
+  
   .name-row {
     flex-direction: column;
     gap: 0;
-  }
-
-  .logo {
-    font-size: 1.75rem;
   }
 }
