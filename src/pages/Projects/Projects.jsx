@@ -9,6 +9,7 @@ export function Projects() {
   const navigate = useNavigate()
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
+  
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [projectToDelete, setProjectToDelete] = useState(null)
   const [newName, setNewName] = useState('')
@@ -22,13 +23,19 @@ export function Projects() {
   async function fetchProjects() {
     try {
       setLoading(true)
+      
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return 
+
       const { data, error } = await supabase
         .from('projects')
-        .select('*, tasks(tag)') 
+        .select('*, tasks(tag)')
+        .eq('user_id', user.id) 
         .order('created_at', { ascending: false })
 
       if (error) throw error
       setProjects(data)
+
     } catch (error) {
       console.error(error)
     } finally {
@@ -47,16 +54,24 @@ export function Projects() {
     if (!newName.trim()) return
 
     try {
+      const { data: { user } } = await supabase.auth.getUser()
+
       const { error } = await supabase
         .from('projects')
-        .insert([{ name: newName, description: newDesc, status: newStatus }])
+        .insert([{ 
+          name: newName, 
+          description: newDesc, 
+          status: newStatus,
+          user_id: user.id 
+        }])
 
       if (error) throw error
       
       setNewName('')
       setNewDesc('')
       setIsAddModalOpen(false)
-      fetchProjects()
+      fetchProjects() 
+
     } catch (error) {
       alert('Erro ao criar projeto.')
     }
@@ -93,11 +108,11 @@ export function Projects() {
         <p>Carregando projetos...</p>
       ) : projects.length === 0 ? (
         <div className="empty-state-container">
-          <FolderPlus size={64} weight="thin" className="empty-icon" />
+          <FolderPlus weight="thin" className="empty-icon" />
           <h2>Você ainda não tem projetos</h2>
           <p>Crie seu primeiro projeto para começar a organizar suas tarefas.</p>
           <button className="btn-new-project-large" onClick={() => setIsAddModalOpen(true)}>
-            <Plus size={24} weight="bold" />
+            <Plus weight="bold" className="icon-add-large" />
             Criar Meu Primeiro Projeto
           </button>
         </div>
@@ -106,7 +121,7 @@ export function Projects() {
           <header className="page-header">
             <h2 className="page-title">Selecionar Projeto</h2>
             <button className="btn-new-project" onClick={() => setIsAddModalOpen(true)}>
-              <Plus size={20} weight="bold" className="btn-icon" />
+              <Plus weight="bold" className="icon-add" />
               Novo Projeto
             </button>
           </header>
@@ -115,10 +130,8 @@ export function Projects() {
 
           <div className="projects-grid">
             {projects.map(project => {
-              const tasks = project.tasks || []
-              const highCount = tasks.filter(t => t.tag === 'Alta').length
-              const mediumCount = tasks.filter(t => t.tag === 'Média').length
-              const lowCount = tasks.filter(t => t.tag === 'Baixa').length 
+              const highCount = project.tasks ? project.tasks.filter(t => t.tag === 'Alta').length : 0
+              const mediumCount = project.tasks ? project.tasks.filter(t => t.tag === 'Média').length : 0
 
               return (
                 <div 
@@ -133,7 +146,7 @@ export function Projects() {
                       onClick={(e) => { e.stopPropagation(); setProjectToDelete(project.id) }} 
                       title="Excluir projeto"
                     >
-                      <Trash size={18} />
+                      <Trash className="icon-trash" />
                     </button>
                   </div>
                   
@@ -147,7 +160,6 @@ export function Projects() {
                     <div className="priority-counts">
                       {highCount > 0 && <span className="prio-badge high">Alta: {highCount}</span>}
                       {mediumCount > 0 && <span className="prio-badge medium">Média: {mediumCount}</span>}
-                      {lowCount > 0 && <span className="prio-badge low">Baixa: {lowCount}</span>}
                     </div>
                   </div>
                 </div>
